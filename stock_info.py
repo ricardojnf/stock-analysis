@@ -47,14 +47,17 @@ def get_stock_history(symbol, timeRange='max', dividendInfo=False,
     '''
 
     st_hist = yf.Ticker(symbol).history(period=timeRange)
-    
+
     if dividendInfo:
         st_div_hist = st_hist['Dividends'] != 0.0
         print(st_div_hist)
     if stockSplit:
         st_split_hist = st_hist['Stock Splits'] != 0.0
     
-    st_hist = st_hist[st_div_hist | st_split_hist]
+    try:
+        st_hist = st_hist[st_div_hist | st_split_hist]
+    except UnboundLocalError:
+        pass
+    
     return st_hist
 
-print(get_stock_history('AAPL', timeRange='5y', dividendInfo=True, stockSplit=True))

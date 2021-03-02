@@ -1,0 +1,48 @@
+A	Agilent Technologies
+AA	Alcoa
+AACG	ATA Creativity Global
+AACQ	Artius Acquisition
+AAIC	Arlington Asset Investment
+AAL	American Airlines
+AAMC	Altisource Asset Management
+AAME	Atlantic American
+AAN	The Aaron's Company
+AAOI	Applied Optoelectronics
+AAON	AAON, Inc.
+AAP	Advance Auto Parts
+AAPL	Apple
+AAT	American Assets Trust
+AAU	Almaden Minerals
+AAWW	Atlas Air Worldwide Holdings
+AAXN	Axon Enterprise
+AB	AllianceBernstein
+ABB	ABB Ltd.
+ABBV	AbbVie
+ABC	AmerisourceBergen
+ABCB	Ameris Bancorp
+ABCFF	Abacus Mining & Exploration
+ABCL	AbCellera Biologics
+ABCM	Abcam PLC
+ABCP	AmBase
+ABEO	Abeona Therapeutics
+ABEV	Ambev
+ABG	Asbury Automotive Group
+ABGI	ABG Acquisition I
+ABILF	Ability
+ABIO	ARCA biopharma
+ABM	ABM Industries
+ABMC	American Bio Medica
+ABMD	Abiomed
+ABNB	Airbnb
+ABR	Arbor Realty Trust
+ABST	Absolute Software
+ABT	Abbott Laboratories
+ABTX	Allegiance Bancshares
+ABUS	Arbutus Biopharma
+AC	Associated Capital Group
+ACA	Arcosa
+ACAC	Acies Acquisition
+ACAD	ACADIA Pharmaceuticals
+ACAM	Acamar Partners Acquisition
+ACB	Aurora Cannabis
+ACBI	Atlantic Capital Bancshares
