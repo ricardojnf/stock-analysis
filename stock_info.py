@@ -21,7 +21,8 @@ def get_stock_info(symbol):
     return [st_info[key] for key in key_info]
 
 
-def get_stock_history(symbol, timeRange='max'):
+def get_stock_history(symbol, timeRange='max', dividendInfo=False,
+                        stockSplit=False):
     '''
     Returns basic info about the stock requested
 
@@ -33,6 +34,10 @@ def get_stock_history(symbol, timeRange='max'):
     period : str
         Time range of the information.
         Valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
+    
+    dividendInfo : bool
+        Indicates if we want to filter only the dates where it was paid
+        dividends
 
     Returns
     -------
@@ -42,5 +47,14 @@ def get_stock_history(symbol, timeRange='max'):
     '''
 
     st_hist = yf.Ticker(symbol).history(period=timeRange)
+    
+    if dividendInfo:
+        st_div_hist = st_hist['Dividends'] != 0.0
+        print(st_div_hist)
+    if stockSplit:
+        st_split_hist = st_hist['Stock Splits'] != 0.0
+    
+    st_hist = st_hist[st_div_hist | st_split_hist]
     return st_hist
 
+print(get_stock_history('AAPL', timeRange='5y', dividendInfo=True, stockSplit=True))
