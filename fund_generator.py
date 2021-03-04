@@ -3,49 +3,29 @@ import stock_info
 from collections import defaultdict
 import itertools
 
-MAX_NUMBER_STOCKS = 30
-
-class Fund:
-    def __init__(self, identifier):
-        self.identifier = identifier
-        self.orders = list()
-        self.fund = defaultdict()
-
-    def setFund(self, stockDict):
-        self.fund = stockDict
+def calculate_yearly_growth_rate(portfolio, timeRange):
     
-    def generateDefaultFund(self):
-        self.__findBestFund()
+    startPrice = 0.0
+    endPrice = 0.0
+    try:
+        for ticker in portfolio.keys():
+            hist = stock_info.get_stock_history(ticker, timeRange)
+            print(hist)
+            stock_time_range = hist.index[-1].year - hist.index[0].year
+            if stock_time_range < int(timeRange[:-1]):
+                raise Exception("Time range not possible")
+            startPrice += hist.values[0][3] * portfolio[ticker]
+            endPrice += hist.values[-1][3] * portfolio[ticker]
+    except Exception as e:
+        print(e)
+        print(f"Recalculating for {stock_time_range}y")
+        return calculate_yearly_growth_rate(portfolio, f"{stock_time_range}y")
+    
+    return (((endPrice - startPrice) / startPrice) * 100) / stock_time_range
 
-    # -------- Private Methods ---------
-    def __generateCombStocks(self):
-        tickers = list()
-        with open('tickers_list.txt', 'r') as f:
-            stocks = f.readlines()
-            for stock in stocks:
-                tickers.append(stock.split('\t')[0])
-            
-            comb = itertools.combinations(tickers, MAX_NUMBER_STOCKS)
-        
-        return comb
+portfolio = {
+    'VOO': 1
+}
 
-    def __findBestFund(self):
-        growth = 0.0
-        combs = self.__generateCombStocks()
-        for comb in combs:
-            startPrice = 0.0
-            endPrice = 0.0
-            for stock in comb:
-                try:
-                    hist = stock_info.get_stock_history(stock, timeRange='5y')
-                    startPrice += hist.values[0][3] * (1/MAX_NUMBER_STOCKS)
-                    endPrice += hist.values[-1][3] * (1/MAX_NUMBER_STOCKS)
-                except Exception:
-                    pass
-            if endPrice - startPrice > growth:
-                growth = endPrice - startPrice
-                bestComb = comb
-        
-        print(growth)
-        print(bestComb)
+print(calculate_yearly_growth_rate(portfolio, '3y'))
 

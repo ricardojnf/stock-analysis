@@ -60,4 +60,3 @@ def get_stock_history(symbol, timeRange='max', dividendInfo=False,
         pass
     
     return st_hist
-
