@@ -1,4 +1,4 @@
-import yfinance as yf
+from yahoo_fin import stock_info as yf
 from datetime import datetime, timedelta
 
 SECONDS_IN_A_YEAR = 31536000
@@ -7,12 +7,20 @@ def get_value_growth(portfolio, startDate, endDate):
     startPrice = 0.0
     endPrice = 0.0
     for ticker in portfolio.keys():
-        hist = yf.Ticker(ticker).history(start=startDate, 
-                                        end=endDate)
-        print(hist)
-        startPrice += hist['Close'][0] * portfolio[ticker]
-        div_info = hist[hist['Dividends'] != 0.0]
-        endPrice += (sum(div_info['Dividends']) + hist['Close'][-1]) * portfolio[ticker]
+        hist = yf.get_data(ticker, start_date=startDate, 
+                                    end_date=endDate)
+        
+        startPrice += hist['close'][0] * portfolio[ticker]
+        try:
+            div_info = yf.get_dividends(ticker, start_date=startDate, 
+                                    end_date=endDate)
+            print(div_info)
+            div_value = sum(div_info['dividend'])
+            print(div_value)
+        except Exception:
+            div_value = 0.0
+
+        endPrice += (div_value + hist['close'][-1]) * portfolio[ticker]
     
     return startPrice, endPrice
 
@@ -23,8 +31,8 @@ def compound_annual_growth_rate(portfolio, startDate, endDate):
                                             startDate,
                                             endDate)
     
-    start = datetime.strptime(startDate, '%Y-%m-%d')
-    end = datetime.strptime(endDate, '%Y-%m-%d')
+    start = datetime.strptime(startDate, '%m/%d/%Y')
+    end = datetime.strptime(endDate, '%m/%d/%Y')
     elapsedTime = divmod((end - start).total_seconds(), SECONDS_IN_A_YEAR)
     years = elapsedTime[0]+elapsedTime[1]/SECONDS_IN_A_YEAR
     print(years)
@@ -33,13 +41,13 @@ def compound_annual_growth_rate(portfolio, startDate, endDate):
 
 def annual_return_rate_by_year(portfolio, year):
     return compound_annual_growth_rate(portfolio, 
-                                startDate=f'{year}-01-01',
-                                endDate=f'{year+1}-01-01')
+                                startDate=f'01/01/{year}',
+                                endDate=f'01/01/{year+1}')
 
 portfolio = {
-    'VOOG': 1,
+    'VOO': 1,
 }
 
-print(compound_annual_growth_rate(portfolio, 
-                                startDate='2020-01-01',
-                                endDate='2021-01-01'))
+hist = yf.get_data('VOOG', start_date=f'01/01/2020', 
+                                    end_date=f'01/01/2021')
+print(hist)
