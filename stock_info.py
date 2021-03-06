@@ -60,10 +60,3 @@ def get_stock_history(symbol, timeRange='max', dividendInfo=False,
         pass
     
     return st_hist
-
-
-st_info = yf.Ticker('VOOG').history(start='2020-01-01', end='2020-12-31')
-div_info = st_info[st_info['Dividends'] != 0.0]
-print(div_info)
-print(div_info['Dividends'])
-print(sum(div_info['Dividends']))
