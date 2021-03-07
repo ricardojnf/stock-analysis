@@ -53,5 +53,16 @@ def annual_return_rate_by_year(ticker, year):
                                 endDate=f'01/01/{year+1}')
 
 
-hist = growth_rate('VOO', startDate='09/08/2020')
-print(hist)
+def get_PE_ratio(ticker):
+
+    info = yf.get_analysts_info(ticker)['Earnings History']
+    date = info.columns[-1]
+    eps = sum(map(float, info.loc[1][1:]))
+    st_info = yf.get_data(ticker, start_date=date)
+    share_price = st_info['close'][-1]
+
+    return share_price / eps
+
+
+
+print(get_PE_ratio('AAPL'))
