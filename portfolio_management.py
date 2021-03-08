@@ -2,13 +2,18 @@ from yahoo_fin import stock_info as yf
 from collections import defaultdict
 from datetime import datetime
 import stock_analyser as sa
+import plot_lib as pl
 
 class Portfolio:
 
     def __init__(self):
         self.orders = defaultdict(list)
         self.portfolio = {}
-    
+
+
+    def get_portfolio_distribution(self):
+        pl.portfolio_pie_chart(self.portfolio)
+
 
     def add_buy_order(self, ticker, nShares, date):
         to_date = datetime.strptime(date, '%m/%d/%Y')
