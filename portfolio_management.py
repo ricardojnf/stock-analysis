@@ -17,7 +17,11 @@ class Portfolio:
 
     def add_buy_order(self, ticker, nShares, date):
         to_date = datetime.strptime(date, '%m/%d/%Y')
-        share_price = sa.get_price_at_date(ticker, date)
+        try:
+            share_price = sa.get_price_at_date(ticker, date)
+        except Exception:
+            raise Exception('It\'s not possible to buy shares at this date')
+        
         self.orders[to_date].append((ticker, nShares * share_price, 'buy'))
 
         if ticker in self.portfolio:
@@ -36,4 +40,3 @@ class Portfolio:
         share_price = sa.get_price_at_date(ticker, date)
         self.orders[to_date].append((ticker, nShares * share_price, 'sell'))
         
-
