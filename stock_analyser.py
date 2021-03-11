@@ -65,10 +65,11 @@ def get_PE_ratio(ticker):
 
 
 def get_price_at_date(ticker, date):
-    to_date = datetime.strptime(date, '%m/%d/%Y')
+    if type(date) == str:
+        date = datetime.strptime(date, '%m/%d/%Y')
     hist = yf.get_data(ticker, 
-            start_date=f'{to_date.month}/{to_date.day}/{to_date.year}',
-            end_date=f'{to_date.month}/{to_date.day + 1}/{to_date.year}')
+            start_date=f'{date.month}/{date.day}/{date.year}',
+            end_date=f'{date.month}/{date.day + 1}/{date.year}')
     
     return hist['close'][0]
 

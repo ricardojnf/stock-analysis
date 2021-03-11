@@ -1,6 +1,7 @@
 from yahoo_fin import stock_info as yf
 from collections import defaultdict
 from datetime import datetime
+import pandas as pd
 import stock_analyser as sa
 import plot_lib as pl
 
@@ -15,14 +16,15 @@ class Portfolio:
         pl.portfolio_pie_chart(self.portfolio)
 
 
+    def visualize_value_growth(self, start_date=None):
+        date_range, invested_money, value_money = self.__portfolio_over_time__()
+        pl.plot_portfolio_evolution(date_range, invested_money, value_money)
+    
+
     def add_buy_order(self, ticker, nShares, date):
         to_date = datetime.strptime(date, '%m/%d/%Y')
-        try:
-            share_price = sa.get_price_at_date(ticker, date)
-        except Exception:
-            raise Exception('It\'s not possible to buy shares at this date')
         
-        self.orders[to_date].append((ticker, nShares * share_price, 'buy'))
+        self.orders[to_date].append((ticker, nShares, 'buy'))
 
         if ticker in self.portfolio:
             self.portfolio[ticker] += nShares
@@ -37,6 +39,56 @@ class Portfolio:
             raise Exception(f'Cannot sell {ticker} shares, not enough shares to sell')
 
         to_date = datetime.strptime(date, '%m/%d/%Y')
-        share_price = sa.get_price_at_date(ticker, date)
-        self.orders[to_date].append((ticker, nShares * share_price, 'sell'))
+        self.orders[to_date].append((ticker, nShares, 'sell'))
+    
+
+    ###########################################################################
+    #######################    PRIVATE METHODS    #############################
+    ###########################################################################
+
+    def __portfolio_over_time__(self, start_date=None):
+
+        if not start_date:
+            start_date = sorted(list(self.orders.keys()))[0]
         
+        date_range = pd.date_range(start_date, datetime.today(), freq='D')
+        portf = {}
+
+        invested_money = [0]*len(date_range)
+        value_money = [0]*len(date_range)
+
+        for i in range(len(date_range)):
+            if i > 0:
+                invested_money[i] = invested_money[i-1]
+            if date_range[i] in self.orders.keys():
+                for tup in self.orders[date_range[i]]:
+                    mult = 1
+                    if tup[2] == 'sell':
+                        mult = -1
+                    if tup[0] in portf.keys():
+                        portf[tup[0]] += tup[1]*mult
+                    else:
+                        portf[tup[0]] = tup[1]*mult
+                    invested_money[i] += sa.get_price_at_date(tup[0], 
+                                        date_range[i]) * mult
+                
+            for key, value in portf.items():
+                try:
+                    price = sa.get_price_at_date(key, 
+                                        date_range[i]) * value
+                except Exception:
+                    price = value_money[i-1]
+                value_money[i] += price
+
+        return date_range, invested_money, value_money
+
+        
+
+test = Portfolio()
+test.add_buy_order('VOO', 2, '03/06/2019')
+test.add_buy_order('VOO', 5, '05/02/2019')
+test.add_buy_order('VOO', 3, '03/04/2019')
+test.add_buy_order('VOO', 3, '04/04/2019')
+test.add_buy_order('VOO', 4, '03/12/2019')
+test.add_buy_order('VOO', 2, '04/02/2019')
+test.visualize_value_growth()

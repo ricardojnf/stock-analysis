@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+from yahoo_fin import stock_info as yf
 
 def portfolio_pie_chart(portfolio):
 
@@ -11,9 +11,12 @@ def portfolio_pie_chart(portfolio):
     plt.close()
 
 
-def plot_portfolio_evolution(portfolio):
+def plot_portfolio_evolution(timestamps, invested_money, value_money):
+    
     plt.figure(figsize=(6,5))
     plt.title('Portfolio Evolution over time')
-    
+    plt.plot(timestamps, invested_money, label='Invested Money')
+    plt.plot(timestamps, value_money, label='Portfolio Value')
+    plt.xticks(rotation=45)
     plt.show()
     plt.close()
