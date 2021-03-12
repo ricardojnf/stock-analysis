@@ -70,7 +70,7 @@ class Portfolio:
                     else:
                         portf[tup[0]] = tup[1]*mult
                     invested_money[i] += sa.get_price_at_date(tup[0], 
-                                        date_range[i]) * mult
+                                        date_range[i]) * tup[1] * mult
                 
             for key, value in portf.items():
                 try:
@@ -85,10 +85,9 @@ class Portfolio:
         
 
 test = Portfolio()
-test.add_buy_order('VOO', 2, '03/06/2019')
-test.add_buy_order('VOO', 5, '05/02/2019')
-test.add_buy_order('VOO', 3, '03/04/2019')
-test.add_buy_order('VOO', 3, '04/04/2019')
-test.add_buy_order('VOO', 4, '03/12/2019')
-test.add_buy_order('VOO', 2, '04/02/2019')
-test.visualize_value_growth()
+test.add_buy_order('VOO', 20, '03/06/2019')
+test.add_buy_order('VOOG', 20, '03/06/2019')
+test.add_buy_order('MSFT', 20, '03/06/2019')
+test.add_buy_order('AAPL', 20, '03/06/2019')
+test.add_buy_order('AMZN', 20, '03/06/2019')
+test.get_portfolio_distribution()
